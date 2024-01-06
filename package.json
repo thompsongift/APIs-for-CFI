@@ -1,0 +1,18 @@
+{
+  "name": "cfi-project",
+  "version": "1.0.0",
+  "description": "Solve the follow up problem of CFI",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Eno Gift Thompson",
+  "license": "MIT",
+  "dependencies": {
+    "exceljs": "^4.4.0",
+    "express": "^4.18.2",
+    "mongoose": "^8.0.2",
+    "multer": "^1.4.5-lts.1",
+    "uuid": "^9.0.1"
+  }
+}
