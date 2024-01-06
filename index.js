@@ -15,7 +15,7 @@ const { connectToMongoDB } = require("./mongoDB_setup");
 connectToMongoDB();
 app.use(express.json());
 
-let port = 3000;
+let port = process.env.PORT || port;
 
 // initialize the database
 
@@ -26,7 +26,7 @@ app.get("/data", (req, res) => {
   res.send("connected");
 });
 
-httpsServer.listen(process.env.PORT, () => {
+httpsServer.listen(port, () => {
   console.log(`HTTPS server running on ${port}`);
 });
 
