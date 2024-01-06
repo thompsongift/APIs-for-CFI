@@ -21,7 +21,9 @@ let port = 3000;
 
 app.use("/api", router_main);
 app.use("/api_ctrl", router_access);
-
+app.get("/", (req, res) => {
+  res.send("Welcome to our website!");
+});
 app.get("/data", (req, res) => {
   res.send("connected");
 });
