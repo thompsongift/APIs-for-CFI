@@ -26,7 +26,7 @@ app.get("/data", (req, res) => {
   res.send("connected");
 });
 
-httpsServer.listen(port, () => {
+httpsServer.listen(process.env.PORT || port, () => {
   console.log(`HTTPS server running on ${port}`);
 });
 
