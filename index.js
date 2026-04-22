@@ -1,45 +1,33 @@
 const mongoose = require("mongoose");
 const express = require("express");
-const https = require("https");
-const { promises: fsPromises, readFileSync } = require("fs");
-const app = express();
-const credentials = {
-  key: readFileSync("private.key"),
-  cert: readFileSync("certificate.crt"),
-};
-const httpsServer = https.createServer(credentials, app);
-const { router_main } = require("./routing/routing_main");
-const { router_access } = require("./routing/routing_access");
-const { followUpData } = require("./mongooseSchema");
+const http = require("http");
 const { connectToMongoDB } = require("./mongoDB_setup");
+const { saveNewUser } = require("./mongoDB_functions");
+const { saveToMongoDBFromExcel } = require("./excelData");
+const { routerQuestions } = require("./routing/questions_route");
+const { routerSubmit } = require("./routing/submit_route");
+const { routerUser } = require("./routing/user_route");
+const { routerAdmin } = require("./routing/admin_router");
+
+const app = express();
+const port = 3001;
+const host = "0.0.0.0";
+
 connectToMongoDB();
 app.use(express.json());
+app.use(express.static("dist"));
+app.use("/api/question", routerQuestions);
+app.use("/api/submit", routerSubmit);
+app.use("/api/getuser", routerUser);
+app.use("/api/examadmin", routerAdmin);
 
-let port = process.env.PORT;
-
-// initialize the database
-
-app.use("/api", router_main);
-app.use("/api_ctrl", router_access);
-app.get("/", (req, res) => {
-  res.send("Welcome to our website!");
-});
-app.get("/data", (req, res) => {
-  res.send("connected");
+app.get("*", (req, res) => {
+  res.sendFile(__dirname + "/dist/index.html");
 });
 
-httpsServer.listen(port, () => {
-  console.log(`HTTPS server running on ${port}`);
+const httpServer = http.createServer(app);
+
+httpServer.listen(port, host, () => {
+  console.log(`HTTP server running at http://${host}:${port}`);
+  //saveToMongoDBFromExcel();
 });
-
-/*
-APIs
-
-curl --insecure -H "x-api-key: e8c65c0d-e231-4294-9115-85d77c33140d" https://localhost:3000/api/init_xdata
-curl --insecure -H "x-api-key: e8c65c0d-e231-4294-9115-85d77c33140d" https://localhost:3000/api/del_person?name=Thompson
-curl --insecure "https://localhost:3000/api_ctrl/savenew?name=<name>&phonenum=<phonenumber>"
-
-curl --insecure "https://localhost:3000/api_ctrl/savenew?name=GiftThompson&phonenum=09154045167"
-
-
-*/
